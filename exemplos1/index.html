@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Introdução ao Vue JS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+
+    <div id="app">
+        {{ msg }}
+        <p v-bind:title="titulo">Teste com Title</p>
+        <p v-if='condicao'>Teste com IF</p>
+        <p v-for="registro in registros">{{registro.titulo}}</p>
+        <button v-if='!clicou' v-on:click='usuarioClicou'>salvar</button>
+        <button v-if='clicou' v-on:click='usuarioClicou'>aguarde...</button>
+        <p><input type="text" v-model='usuario.nome'></p>     
+        <p>Nome: {{usuario.nome}}</p>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                msg: 'Iniciando com Vue JS 2',
+                titulo: 'Teste com v-bind',
+                condicao: true,
+                registros: [
+                    { titulo: 'registro 1' },
+                    { titulo: 'registro 2' },
+                    { titulo: 'registro 3' },
+                    { titulo: 'registro 4' },
+                    { titulo: 'registro 5' }
+                ],
+                clicou: false,
+                usuario: { nome: '' }
+            },
+            methods: {
+                usuarioClicou: function () {
+                    this.clicou = !this.clicou;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

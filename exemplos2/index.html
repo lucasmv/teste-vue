@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Introdução ao Vue JS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+
+    <div id="app">
+        <gui-titulo v-bind:titulo="meuTitulo"></gui-titulo>
+
+        <input type="text" v-model="meuTitulo">
+
+        <hr>
+
+        <gui-tabela v-bind:titulos="['Nome', 'E-mail', 'Link', 'Valor']" v-bind:registros="registros"></gui-tabela>
+
+        <p v-once>{{meuTitulo}}</p>
+        <p v-html="html"></p>
+        <p>{{ 25.985546 | trataValor }}</p>
+
+        <ul>
+            <li v-for="registro in registros">
+                {{registro.nome}} - {{registro.email}} - {{registro.link}} - {{registro.valor | trataValor}}
+            </li>
+        </ul>
+        <p>Total:(methods) {{totalValorMetodo() | trataValor}}</p>
+        <p>Total:(computed) {{totalValorComputado | trataValor}}</p>
+        <p>contaMethods {{contaMethods}}</p>
+        <p>contaComputed {{contaComputed}}</p>
+        <p><input type="text" v-model="nome" placeholder="Nome"></p>
+        <p>Alterações: {{contaAlteracoes}}</p>
+
+    </div>
+
+    <script type="text/x-template" id="gui-titulo">
+        <h2>{{titulo}}</h2>
+    </script>
+
+    <script type="text/x-template" id="gui-tabela">
+        <table style="width: 100%">
+                <thead>
+                    <tr>
+                        <th v-for="titulo in titulos">{{titulo}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="registro in registros">
+                        <td v-for="item in registro">{{item}}</td>                     
+                    </tr>
+                </tbody>
+                <tfoot></tfoot>
+            </table>
+    </script>
+
+    <script>
+
+        Vue.component('gui-titulo', {
+            props: ['titulo'],
+            template: '#gui-titulo'
+        });
+
+        Vue.component('gui-tabela', {
+            props: ['titulos', 'registros'],
+            template: '#gui-tabela'
+        });
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                meuTitulo: 'Esse é o Título',
+                registros: [
+                    { nome: 'lucas 1', email: 'registro1@lucas.com', link: 'link 01', valor: 23.4582 },
+                    { nome: 'lucas 2', email: 'registro2@lucas.com', link: 'link 01', valor: 10.5643 },
+                    { nome: 'lucas 3', email: 'registro3@lucas.com', link: 'link 01', valor: 65.7890 },
+                    { nome: 'lucas 4', email: 'registro4@lucas.com', link: 'link 01', valor: 12.4545 },
+                    { nome: 'lucas 5', email: 'registro5@lucas.com', link: 'link 01', valor: 99.8654 }
+                ],
+                html: '<a href="#">Esse é um link</a>',
+                contaMethods: 0,
+                contaComputed: 0,
+                nome: '',
+                contaAlteracoes: 0
+            },
+            methods: {
+                totalValorMetodo: function () {
+                    //this.contaMethods++;
+                    return this.registros.reduce(function (total, item) {
+                        return total + item.valor;
+                    }, 0.0);
+                }
+            },
+            computed: {
+                totalValorComputado: function () {
+                    this.contaComputed++;
+                    return this.registros.reduce(function (total, item) {
+                        return total + item.valor;
+                    }, 0.0);
+                }
+            },
+            filters: {
+                trataValor: function (valor) {
+                    return ('R$ ' + (valor).toFixed(2)).replace('.', ',');
+                }
+            },
+            watch: {
+                nome: function (valor) {
+                    this.contaAlteracoes++;
+                    this.nome = valor.toUpperCase();
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
